@@ -1,0 +1,14 @@
+{
+  "invalidLogins": [
+    {
+      "description": "unknown email and password",
+      "email": "no.such.user.qa@example.com",
+      "password": "WrongPass@123"
+    },
+    {
+      "description": "malformed-looking credentials",
+      "email": "another_unknown_user@example.com",
+      "password": "12345"
+    }
+  ]
+}
