@@ -5,7 +5,8 @@ This is the folder for automation exercise - we have automated
 
 "API + UI both automation are present."
 
-Create the you own .env with refrence of .env.example, also insert the base_url, API_url and password.
+Create the you own .env with refrence of .env.example, also insert the BASE_URL=https://automationexercise.com
+API_URL=https://automationexercise.com/api and password.
 
 commands you can use after cloning this repo are as follows :
 
