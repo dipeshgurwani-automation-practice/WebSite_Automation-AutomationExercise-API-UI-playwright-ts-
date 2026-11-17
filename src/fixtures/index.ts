@@ -1,30 +1,26 @@
 import { test as base, expect } from '@playwright/test';
-import { AccountApi } from '../api/AccountApi';
 import { LoginPage } from '../pages/LoginPage';
 import { User } from '../types/user';
-import { buildUser } from '../utils/userFactory';
+import { apiCreateUser, apiDeleteUser } from '../utils/userApi';
+import { buildUser, uniqueEmail } from '../utils/userData';
 import { CartPage } from '../pages/CartPage';
 import { ProductDetailPage } from '../pages/ProductDetailPage';
 import { ProductsPage } from '../pages/ProductsPage';
 import { ContactPage } from '../pages/ContactPage';
-import { AuthApi } from '../api/AuthApi';
-import { CatalogApi } from '../api/CatalogApi';
 
 
 
 type Fixtures = {
   loginPage: LoginPage;
-  accountApi: AccountApi;
   newUser: User;
   productsPage: ProductsPage;
   productDetailPage: ProductDetailPage;
   cartPage: CartPage;
   contactPage: ContactPage;
-  authApi: AuthApi;
-  catalogApi: CatalogApi;
-  trackUser: (user: User) => void;
-
-
+  /** Email of a user that already exists. Deleted after the test, pass or fail. */
+  registeredUser: string;
+  /** Call with an email the test creates itself; it is deleted after the test, pass or fail. */
+  cleanupEmail: (email: string) => void;
 };
 
 export const test = base.extend<Fixtures>({
@@ -32,15 +28,11 @@ export const test = base.extend<Fixtures>({
     await use(new LoginPage(page));
   },
 
-  accountApi: async ({ request }, use) => {
-    await use(new AccountApi(request));
-  },
-
-  newUser: async ({ accountApi }, use) => {
+  newUser: async ({ request }, use) => {
     const user = buildUser();
-    await accountApi.create(user);
+    await apiCreateUser(request, user.email);
     await use(user);
-    await accountApi.delete(user);
+    await apiDeleteUser(request, user.email);
   },
     productsPage: async ({ page }, use) => {
     await use(new ProductsPage(page));
@@ -56,26 +48,23 @@ export const test = base.extend<Fixtures>({
     contactPage: async ({ page }, use) => {
     await use(new ContactPage(page));
   },
-    authApi: async ({ request }, use) => {
-    await use(new AuthApi(request));
+
+  registeredUser: async ({ request }, use) => {
+    const email = uniqueEmail();
+
+    const created = await apiCreateUser(request, email);
+    expect(created.responseCode, 'precondition: user creation').toBe(201);
+
+    await use(email); // the test runs here
+
+    await apiDeleteUser(request, email); // teardown: always runs
   },
 
-  catalogApi: async ({ request }, use) => {
-    await use(new CatalogApi(request));
+  cleanupEmail: async ({ request }, use) => {
+    const emails: string[] = [];
+    await use((email) => emails.push(email));
+    for (const email of emails) await apiDeleteUser(request, email);
   },
-
-  trackUser: async ({ accountApi }, use) => {
-    const created: User[] = [];
-    await use((user) => {
-      created.push(user);
-    });
-    for (const user of created) {
-      await accountApi.delete(user);
-    }
-  },
-
-
-
 });
 
 export { expect };

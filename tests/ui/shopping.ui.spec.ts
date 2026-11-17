@@ -1,7 +1,7 @@
 import { test, expect } from '../../src/fixtures';
 
 test.describe('Products and cart (UI)', () => {
-  test('UI_006 products list and product detail', { tag: ['@smoke', '@regression'] }, async ({ productsPage, productDetailPage }) => {
+  test('UI_005 products list and product detail', { tag: ['@smoke', '@regression'] }, async ({ productsPage, productDetailPage }) => {
     await productsPage.open();
     await expect(productsPage.title).toContainText(/all products/i);
     const firstCard = productsPage.cards.first();
@@ -18,7 +18,7 @@ test.describe('Products and cart (UI)', () => {
   });
 
   for (const term of ['Dress', 'Tshirt', 'Jeans']) {
-    test(`UI_007 search for "${term}"`, { tag: ['@regression'] }, async ({ productsPage }) => {
+    test(`UI_006 search for "${term}"`, { tag: ['@regression'] }, async ({ productsPage }) => {
       await productsPage.open();
       await productsPage.search(term);
 
@@ -27,7 +27,7 @@ test.describe('Products and cart (UI)', () => {
     });
   }
 
-  test('UI_008 add product to cart and verify', { tag: ['@smoke', '@regression'] }, async ({ productsPage, cartPage }) => {
+  test('UI_007 add product to cart and verify', { tag: ['@smoke', '@regression'] }, async ({ productsPage, cartPage }) => {
     await productsPage.open();
     const card = productsPage.cards.first();
     const name = await productsPage.getCardName(card);
@@ -44,7 +44,7 @@ test.describe('Products and cart (UI)', () => {
     await expect(cartPage.quantityIn(row)).toHaveText('1');
   });
 
-  test('UI_009 remove product from cart', { tag: ['@regression'] }, async ({ productsPage, cartPage }) => {
+  test('UI_008 remove product from cart', { tag: ['@regression'] }, async ({ productsPage, cartPage }) => {
     await productsPage.open();
     const card = productsPage.cards.first();
     const name = await productsPage.getCardName(card);

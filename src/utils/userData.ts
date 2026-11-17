@@ -27,3 +27,8 @@ export function buildUser(overrides: Partial<User> = {}): User {
     ...overrides,
   };
 }
+
+/** The same user as a form body for the API (email is required). */
+export function userForm(email: string, name = 'Test User') {
+  return { ...buildUser({ email, name }) };
+}

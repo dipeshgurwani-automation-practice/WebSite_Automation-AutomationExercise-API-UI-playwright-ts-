@@ -17,21 +17,3 @@ export interface User {
   city: string;
   mobile_number: string;
 }
-
-export interface ApiResponse {
-  responseCode: number;
-  message?: string;
-  [key: string]: unknown;
-}
-
-export interface UserDetailResponse extends ApiResponse {
-  user: { email: string; first_name: string; city: string };
-}
-
-export interface ProductsResponse extends ApiResponse {
-  products: { name: string; price: string }[];
-}
-
-export interface BrandsResponse extends ApiResponse {
-  brands: unknown[];
-}

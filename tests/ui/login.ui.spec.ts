@@ -2,7 +2,7 @@ import { test, expect } from '../../src/fixtures';
 import users from '../../test-data/users.json';
 
 test.describe('Authentication (UI)', () => {
-  test('UI_002 login with valid credentials', { tag: ['@smoke', '@regression'] }, async ({ loginPage, newUser }) => {
+  test('UI_001 login with valid credentials', { tag: ['@smoke', '@regression'] }, async ({ loginPage, newUser }) => {
     await loginPage.open();
     await expect(loginPage.loginHeading).toBeVisible();
     await loginPage.login(newUser.email, newUser.password);
@@ -12,7 +12,7 @@ test.describe('Authentication (UI)', () => {
   });
 
   for (const { description, email, password } of users.invalidLogins) {
-    test(`UI_003 login fails with ${description}`, { tag: ['@regression', '@negative'] }, async ({ loginPage }) => {
+    test(`UI_002 login fails with ${description}`, { tag: ['@regression', '@negative'] }, async ({ loginPage }) => {
       await loginPage.open();
       await loginPage.login(email, password);
 
@@ -21,7 +21,7 @@ test.describe('Authentication (UI)', () => {
     });
   }
 
-  test('UI_004 logout returns to login page', { tag: ['@regression'] }, async ({ page, loginPage, newUser }) => {
+  test('UI_003 logout returns to login page', { tag: ['@regression'] }, async ({ page, loginPage, newUser }) => {
     await loginPage.open();
     await loginPage.login(newUser.email, newUser.password);
     await expect(loginPage.logoutLink).toBeVisible();
@@ -33,7 +33,7 @@ test.describe('Authentication (UI)', () => {
     await expect(page).toHaveURL(/\/login/);
   });
 
-  test('UI_005 registering with existing email shows error', { tag: ['@regression', '@negative'] }, async ({ loginPage, newUser }) => {
+  test('UI_004 registering with existing email shows error', { tag: ['@regression', '@negative'] }, async ({ loginPage, newUser }) => {
     await loginPage.open();
     await loginPage.startSignup('Duplicate User', newUser.email);
 
